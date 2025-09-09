@@ -1,0 +1,6 @@
+# file: requirements.txt
+openai>=1.40
+requests
+trafilatura
+python-dotenv
+pydantic>=2

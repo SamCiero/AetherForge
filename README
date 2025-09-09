@@ -1,1 +1,15 @@
-Test
+Test<!-- file: README.md -->
+# AetherForge
+Local “ChatGPT-like” stack with internet access (browser tool), BudgetBase-style layout.
+
+## Quick start (desktop)
+1) Clone the repo on your PC (WSL recommended).
+2) `cp .env.example .env` and adjust if needed.
+3) `make bootstrap`
+4) `make dev`
+
+### What this repo contains
+- `src/aetherforge/main.py`: minimal heartbeat that talks to your local LLM (Ollama or vLLM).
+- `scripts/run_agent.sh`: convenience runner.
+- `Makefile`: `bootstrap`, `dev`, `lint`, `test`.
+- `.devcontainer/*`: optional—enables the same workflow in Dev Containers/Codespaces.

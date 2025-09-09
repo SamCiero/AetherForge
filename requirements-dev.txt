@@ -1,0 +1,3 @@
+# file: requirements-dev.txt
+ruff
+pytest

@@ -1,0 +1,8 @@
+// file: .vscode/tasks.json
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Dev: bootstrap venv", "type": "shell", "command": "make bootstrap", "problemMatcher": [] },
+    { "label": "Dev: run agent", "type": "shell", "command": "make dev", "problemMatcher": [] }
+  ]
+}

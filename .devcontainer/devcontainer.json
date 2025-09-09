@@ -1,0 +1,27 @@
+// file: .devcontainer/devcontainer.json
+{
+  "name": "AetherForge",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.10" },
+    "ghcr.io/devcontainers/features/node:1":   { "version": "lts" }
+  },
+  "postCreateCommand": ".devcontainer/setup.sh",
+  "remoteEnv": {
+    "VIRTUAL_ENV": "/workspaces/AetherForge/.venv",
+    "PATH": "/workspaces/AetherForge/.venv/bin:${PATH}"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/AetherForge/.venv/bin/python",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+  "forwardPorts": [11434, 3000, 8000]
+}
