@@ -1,0 +1,5 @@
+// file: .vscode/settings.json
+{
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true
+}
