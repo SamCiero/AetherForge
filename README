@@ -13,3 +13,11 @@ Local “ChatGPT-like” stack with internet access (browser tool), BudgetBase-s
 - `scripts/run_agent.sh`: convenience runner.
 - `Makefile`: `bootstrap`, `dev`, `lint`, `test`.
 - `.devcontainer/*`: optional—enables the same workflow in Dev Containers/Codespaces.
+
+## Browse demo (desktop)
+Start your local model (Ollama/vLLM), then:
+```bash
+make bootstrap
+cp .env.example .env
+chmod +x scripts/run_browse.sh
+./scripts/run_browse.sh "Summarize <topic> and cite sources."
