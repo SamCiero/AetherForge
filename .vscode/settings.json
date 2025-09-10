@@ -1,6 +1,8 @@
 // file: .vscode/settings.json
 {
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "python.defaultInterpreterPath": "${env:HOME}/.venvs/aetherforge/bin/python",
+  "python.terminal.activateEnvironment": true,
   "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true,
-  "makefile.configureOnOpen": false
+  "files.trimTrailingWhitespace": true
 }
