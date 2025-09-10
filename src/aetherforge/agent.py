@@ -77,8 +77,7 @@ def chat_with_tools(
         {
             "role": "system",
             "content": (
-                "You are AetherForge, a local assistant. "
-                "Use tools when you need fresh information, then cite sources."
+                "You are AetherForge, a local assistant. Use tools when you need fresh information, then cite sources."
             ),
         },
         {"role": "user", "content": user_prompt},
