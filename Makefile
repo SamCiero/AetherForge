@@ -1,7 +1,7 @@
 # file: Makefile
-VENV=.venv
-PY=$(VENV)/bin/python
-PIP=$(PY) -m pip
+VENV ?= $(HOME)/.venvs/aetherforge
+PY   = $(VENV)/bin/python
+PIP  = $(PY) -m pip
 
 bootstrap:
 	python -m venv $(VENV)
