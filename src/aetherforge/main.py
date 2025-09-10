@@ -4,6 +4,7 @@ import sys
 from openai import OpenAI
 from dotenv import load_dotenv
 
+
 def main():
     load_dotenv()
     base_url = os.environ.get("BASE_URL", "http://localhost:11434/v1")
@@ -25,6 +26,7 @@ def main():
         print("Hint: ensure your local runner (Ollama or vLLM) is up and BASE_URL points to it.")
         print(f"Error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

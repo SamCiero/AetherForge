@@ -2,6 +2,7 @@
 import textwrap
 from aetherforge.tools.web import clean_html
 
+
 def test_clean_html_extracts_title_and_text():
     html = textwrap.dedent("""
         <html>

@@ -8,6 +8,7 @@ Simple web utilities for AetherForge:
 
 Note: fetch_url does real HTTP; unit tests should target clean_html() and cache_* helpers to stay offline.
 """
+
 from __future__ import annotations
 
 import json
