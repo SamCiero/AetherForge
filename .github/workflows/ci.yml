@@ -4,14 +4,20 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: write  # allow the workflow to push auto-fixes
+
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     env:
-      # Make "src/" imports work in both Ruff and Pytest steps.
       PYTHONPATH: src
     steps:
       - uses: actions/checkout@v4
+        with:
+          # so we can push back to the same branch
+          persist-credentials: true
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -24,11 +30,21 @@ jobs:
           pip install -U pip
           pip install -r requirements.txt -r requirements-dev.txt
 
-      - name: Ruff
+      - name: Ruff (format + fix)
         run: |
           . .venv/bin/activate
-          # Lint both src and tests; ruff.toml controls rules.
-          ruff check src tests
+          ruff format
+          ruff check src tests --fix --output-format=github
+
+      - name: Commit auto-fixes (if any)
+        run: |
+          if ! git diff --quiet; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore(ci): apply ruff auto-fixes"
+            git push
+          fi
 
       - name: Pytest
         run: |
