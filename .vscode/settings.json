@@ -3,6 +3,7 @@
   "terminal.integrated.cwd": "${workspaceFolder}",
   "terminal.integrated.env.linux": { "PROJ_SKIP_PROMPT": "1" },
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.terminal.activateEnvironment": true
+  "python.terminal.activateEnvironment": true,
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.persistentSessionReviveProcess": "never"
 }
-
