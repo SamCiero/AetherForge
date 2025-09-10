@@ -11,7 +11,7 @@ def test_cache_roundtrip_and_freshness():
         "status": 200,
         "title": "Example",
         "text": "Hello cache",
-        "meta": {"k":"v"}
+        "meta": {"k": "v"},
     })
     row = cache_get(url)
     assert row is not None
