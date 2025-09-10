@@ -16,6 +16,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = REPO_ROOT / "scripts" / "summarize_urls.sh"
 
+
 # ---- Tiny test HTTP server (docs + chat completions stub) ----
 class _Handler(BaseHTTPRequestHandler):
     # We'll attach these on the server instance:
@@ -56,12 +57,10 @@ class _Handler(BaseHTTPRequestHandler):
                 "created": int(time.time()),
                 "model": "stub-model",
                 "system_fingerprint": "fp_test",
-                "choices": [{
-                    "index": 0,
-                    "message": {"role": "assistant", "content": content},
-                    "finish_reason": "stop"
-                }],
-                "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+                "choices": [
+                    {"index": 0, "message": {"role": "assistant", "content": content}, "finish_reason": "stop"}
+                ],
+                "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
             }
             payload = json.dumps(data).encode("utf-8")
             self.send_response(200)
@@ -72,6 +71,7 @@ class _Handler(BaseHTTPRequestHandler):
             return
 
         self.send_error(404, "Not Found")
+
 
 class StubServer:
     def __init__(self, mode="good"):
@@ -111,6 +111,7 @@ class StubServer:
         if self.thread:
             self.thread.join(timeout=2)
 
+
 # ---- Helpers ----
 def _run_script(question, urls, base_url, strict=False):
     """Run scripts/summarize_urls.sh with a stub BASE_URL and return (rc, stdout, stderr)."""
@@ -126,6 +127,7 @@ def _run_script(question, urls, base_url, strict=False):
     cmd = ["bash", str(SCRIPT), question] + urls
     proc = subprocess.run(cmd, capture_output=True, text=True, env=env, cwd=str(REPO_ROOT), timeout=20)
     return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
+
 
 # ---- Tests ----
 def test_summarize_urls_happy_path():
@@ -148,6 +150,7 @@ def test_summarize_urls_happy_path():
     # Match by id + em dash + exact URL, ignore variable title content
     assert re.search(rf'^\[1\]\s+.+\s—\s{re.escape(url1)}$', out, re.M), out
     assert re.search(rf'^\[2\]\s+.+\s—\s{re.escape(url2)}$', out, re.M), out
+
 
 def test_summarize_urls_strict_fails_on_bad_citations():
     """STRICT=1 should fail if bullets lack proper trailing [ids] or cite unknown ids."""
