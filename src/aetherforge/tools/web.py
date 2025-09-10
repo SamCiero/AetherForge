@@ -6,14 +6,18 @@ Simple web utilities for AetherForge:
 - cache_get(url), cache_put(url, data), cache_clear()
 - web_search(query) -> demo stub returning high-signal sources
 
-Note: fetch_url does real HTTP; unit tests should target clean_html() and cache_* helpers to stay offline.
+Notes:
+- We avoid using trafilatura.extract_title (not available in all versions).
+- Title is extracted via a small regex; body uses trafilatura.extract() with a safe fallback.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import time
+from html import unescape
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -71,8 +75,8 @@ def cache_put(url: str, data: Dict[str, Any]) -> None:
             url,
             int(data.get("fetched_at", time.time())),
             int(data.get("status", 200)),
-            data.get("title", "")[:512],
-            data.get("text", ""),
+            (data.get("title", "") or "")[:512],
+            data.get("text", "") or "",
             json.dumps(data.get("meta", {})) if data.get("meta") else None,
         ),
     )
@@ -88,27 +92,42 @@ def is_fresh(fetched_at: int, max_age_sec: int) -> bool:
     return (time.time() - fetched_at) < max_age_sec
 
 
+# ---------- HTML helpers ----------
+_TITLE_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.IGNORECASE | re.DOTALL)
+
+
+def _extract_title(html: str) -> str:
+    m = _TITLE_RE.search(html or "")
+    if not m:
+        return ""
+    return unescape(m.group(1)).strip()
+
+
+def _strip_tags(html: str) -> str:
+    # remove script/style, then strip tags, collapse whitespace
+    cleaned = re.sub(r"(?is)<(script|style).*?>.*?</\1>", " ", html or "")
+    cleaned = re.sub(r"(?s)<[^>]+>", " ", cleaned)
+    cleaned = unescape(cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned
+
+
 # ---------- HTML cleaning ----------
 def clean_html(html: str, url: Optional[str] = None) -> Dict[str, str]:
     """
-    Convert raw HTML into (title, text) using trafilatura.
-    Works offline if you pass sample HTML; perfect for unit tests.
+    Convert raw HTML into (title, text).
+    - Title via regex (works across trafilatura versions).
+    - Body text via trafilatura.extract(); if empty, fallback to tag-strip.
     """
-    # Title: try trafilatura first, then <title> fallback
-    title = trafilatura.extract_title(html) or ""
-    if not title:
-        # lightweight fallback
-        start = html.find("<title>")
-        end = html.find("</title>")
-        if 0 <= start < end:
-            title = html[start + 7 : end].strip()
-
+    title = _extract_title(html)
     text = trafilatura.extract(html, url=url) or ""
-    return {"title": title.strip(), "text": text.strip()}
+    if not text:
+        text = _strip_tags(html)
+    return {"title": title, "text": text}
 
 
 # ---------- Fetcher ----------
-_UA = "AetherForge/0.1 (+local; https://github.com/your-user/AetherForge)"
+_UA = "AetherForge/0.1 (+local)"
 
 
 def fetch_url(
