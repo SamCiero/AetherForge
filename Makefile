@@ -1,10 +1,13 @@
 # file: Makefile
-VENV ?= $(HOME)/.venvs/aetherforge
+PYTHON ?= python3
+VENV ?= .venv
 PY   = $(VENV)/bin/python
 PIP  = $(PY) -m pip
 
+.PHONY: bootstrap dev lint test detect-host
+
 bootstrap:
-	python -m venv $(VENV)
+	$(PYTHON) -m venv $(VENV)
 	$(PIP) install -U pip
 	$(PIP) install -r requirements.txt -r requirements-dev.txt
 
@@ -27,5 +30,6 @@ detect-host:
 	else \
 	  echo "No reachable Ollama at localhost or WSL gateway." >&2; exit 1; \
 	fi; \
+	[ -f .env ] || cp .env.example .env; \
 	sed -i "s|^BASE_URL=.*|BASE_URL=$$URL|" .env; \
 	echo "Set BASE_URL=$$URL"
