@@ -4,7 +4,7 @@ VENV ?= .venv
 PY   = $(VENV)/bin/python
 PIP  = $(PY) -m pip
 
-.PHONY: bootstrap dev lint test detect-host
+.PHONY: bootstrap dev lint test detect-host summarize
 
 bootstrap:
 	$(PYTHON) -m venv $(VENV)
@@ -32,4 +32,21 @@ detect-host:
 	fi; \
 	[ -f .env ] || cp .env.example .env; \
 	sed -i "s|^BASE_URL=.*|BASE_URL=$$URL|" .env; \
-	echo "Set BASE_URL=$$URL"
+	if [ "$(DEBUG)" = "1" ]; then echo "Set BASE_URL=$$URL"; fi
+
+# Usage:
+#   make summarize Q="What's new in Python 3.13?" URLS="https://docs.python.org/3.13/whatsnew/3.13.html"
+#   make summarize Q="..." URLS="url1 url2" OUT=out/file.md
+#   make summarize DEBUG=1 Q="..." URLS="..."          # shows extra logs
+summarize: detect-host
+	@set -e; \
+	[ -n "$(URLS)" ] || { echo "ERROR: set URLS=\"<url1> [url2 ...]\"" >&2; exit 2; }; \
+	FLAGS=""; \
+	[ "$(DEBUG)" = "1" ] && FLAGS="$$FLAGS --debug"; \
+	[ -n "$(OUT)" ] && FLAGS="$$FLAGS -o $(OUT)"; \
+	if [ "$(DEBUG)" = "1" ]; then \
+	  echo "→ scripts/summarize_urls.sh $$FLAGS \"$(Q)\" $(URLS)"; \
+	else \
+	  printf "\n"; \
+	fi; \
+	scripts/summarize_urls.sh $$FLAGS "$(Q)" $(URLS)

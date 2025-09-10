@@ -1,9 +1,10 @@
-// file: AetherForge/.vscode/settings.json
+// .vscode/settings.json
 {
   "terminal.integrated.cwd": "${workspaceFolder}",
-  "terminal.integrated.env.linux": { "PROJ_SKIP_PROMPT": "1" },
+  "terminal.integrated.env.linux": {
+    "PROJ_SKIP_PROMPT": "1",
+    "PROJ_QUIET": "1"
+  },
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.terminal.activateEnvironment": true,
-  "terminal.integrated.enablePersistentSessions": false,
-  "terminal.integrated.persistentSessionReviveProcess": "never"
+  "python.terminal.activateEnvironment": false
 }
