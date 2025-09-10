@@ -7,21 +7,29 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    env:
+      # Make "src/" imports work in both Ruff and Pytest steps.
+      PYTHONPATH: src
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+
       - name: Install deps
         run: |
           python -m venv .venv
           . .venv/bin/activate
           pip install -U pip
           pip install -r requirements.txt -r requirements-dev.txt
+
       - name: Ruff
         run: |
           . .venv/bin/activate
-          ruff check src
+          # Lint both src and tests; ruff.toml controls rules.
+          ruff check src tests
+
       - name: Pytest
         run: |
           . .venv/bin/activate

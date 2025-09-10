@@ -1,0 +1,11 @@
+# file: ruff.toml
+line-length = 120
+target-version = "py310"
+
+[lint]
+# Keep it friendly while scaffolding; you can tighten later.
+select = ["E", "F", "W"]        # basic errors & warnings
+ignore = ["E203"]               # brace spacing false-positives with some formatters
+
+[format]
+quote-style = "preserve"
